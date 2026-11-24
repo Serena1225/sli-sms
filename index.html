@@ -371,13 +371,17 @@
 
     function openAppByKey(key) {
       const url = appLinks[key];
-      if (!url) {
-        syncLinks().then(() => {
-          if (appLinks[key]) window.open(appLinks[key], '_blank');
-        });
+      if (url) {
+        window.location.href = url;
         return;
       }
-      window.open(url, '_blank');
+      syncLinks().then(() => {
+        if (appLinks[key]) {
+          window.location.href = appLinks[key];
+        } else {
+          alert('링크 데이터를 불러오지 못했습니다. Apps Script 새 버전 배포를 확인해 주세요.');
+        }
+      });
     }
 
     function openCampusSheet() {
