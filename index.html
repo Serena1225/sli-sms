@@ -372,14 +372,20 @@
     function openAppByKey(key) {
       const url = appLinks[key];
       if (url) {
-        window.location.href = url;
+        window.open(url, '_blank', 'noopener,noreferrer');
         return;
       }
+      const newTab = window.open('', '_blank');
       syncLinks().then(() => {
         if (appLinks[key]) {
-          window.location.href = appLinks[key];
+          if (newTab) {
+            newTab.location.href = appLinks[key];
+          } else {
+            window.location.href = appLinks[key];
+          }
         } else {
-          alert('링크 데이터를 불러오지 못했습니다. Apps Script 새 버전 배포를 확인해 주세요.');
+          if (newTab) newTab.close();
+          alert('링크 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
         }
       });
     }
